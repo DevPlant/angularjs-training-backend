@@ -10,7 +10,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>library-backend</module>
+		<module>library-backend-angular-training</module>
 	</modules>
 
 </project>

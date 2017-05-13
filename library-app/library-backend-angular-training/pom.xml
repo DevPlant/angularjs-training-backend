@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.devplant.introduction</groupId>
-    <artifactId>library-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>library-backend-angular-training</artifactId>
+    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>library-backend</name>
+    <name>library-backend-angular-training</name>
     <description>DevPlant Introduction - Library App</description>
 
     <parent>
@@ -150,11 +150,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.6</version>
-        </dependency>
-        <dependency>
-            <groupId>it.ozimov</groupId>
-            <artifactId>spring-boot-freemarker-email</artifactId>
-            <version>0.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

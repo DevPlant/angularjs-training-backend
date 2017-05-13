@@ -2,11 +2,9 @@ version: '2'
 services:
 
   library-backend:
-    image: devplant/library-backend
+    image: devplant/library-backend-angular-training
     restart: always
     ports:
-      - 7000:7000
-    environment:
-      - VIRTUAL_HOST=*/api/*
-      - VIRTUAL_HOST_WEIGHT=1
+      - 9000:9000
+
 

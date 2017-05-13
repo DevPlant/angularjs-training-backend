@@ -1,21 +1,6 @@
 spring:
   profiles:
-    active: sample-data,dev,secure
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: devplant.spring.trainings@gmail.com
-    password: devplantspringtrainingspassword1989
-    properties:
-      mail:
-        smtp:
-          auth: true
-          ssl:
-            thrust: smtp.gmail.com
-          starttls:
-            required: true
-            enabled: true
-
+    active: sample-data,dev
 
 admin:
   user:
