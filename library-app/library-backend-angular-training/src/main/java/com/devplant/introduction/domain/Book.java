@@ -2,12 +2,9 @@ package com.devplant.introduction.domain;
 
 import com.devplant.introduction.service.BookSaveListener;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import lombok.*;
+import org.apache.commons.lang.mutable.MutableInt;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,7 +13,7 @@ import java.util.List;
 @Entity
 @Document(indexName = "book-search")
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = {  "stocks", "author" })
+@ToString(exclude = { "stocks", "author" })
 @EntityListeners(BookSaveListener.class)
 public class Book {
 
@@ -33,13 +30,31 @@ public class Book {
 
 	private String isbn;
 
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
 	@Field(type = FieldType.Object, ignoreFields = { "book", "user" })
 	private List<BookStock> stocks;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },
+			fetch = FetchType.EAGER)
 	@Field(type = FieldType.Object, ignoreFields = { "authoredBooks" })
 	private Author author;
+
+	public int getNumberOfCopies() {
+		return this.getStocks() == null ? 0 : this.getStocks().size();
+	}
+
+	public int getNumberOfRentedCopies() {
+		if(this.getStocks() == null){
+			return 0;
+		}
+		MutableInt count = new MutableInt(0);
+		getStocks().forEach(stock -> {
+			if (stock.getUserId() != null) {
+				count.setValue(count.intValue() + 1);
+			}
+		});
+
+		return count.intValue();
+	}
 }

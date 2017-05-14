@@ -49,6 +49,16 @@ public class BookController {
 		}
 	}
 
+	@RequestMapping(value = "/{bookId}", method = RequestMethod.GET)
+	public Book getBook(@PathVariable("bookId") long bookId) {
+		Book book = bookRepository.findOne(bookId);
+		if (book == null) {
+			throw new ObjectDoesNotExistException("Book with id : " + bookId + " does not exist");
+		}
+
+		return book;
+	}
+
 	/**
 	 * Update an existing book
 	 */
@@ -82,9 +92,10 @@ public class BookController {
 	}
 
 	private Book saveBook(BookModel bookModel, Book book) {
-		Author author = authorRepository.findOne(bookModel.getAuthorId());
+		Author author = authorRepository.findOne(bookModel.getAuthor().getId());
 		if (author == null) {
-			throw new ObjectDoesNotExistException("Author with id : " + bookModel.getAuthorId() + " does not exist");
+			throw new ObjectDoesNotExistException(
+					"Author with id : " + bookModel.getAuthor().getId() + " does not exist");
 		}
 
 		book.setName(bookModel.getName());
@@ -117,7 +128,7 @@ public class BookController {
 			}
 		});
 
-		if (canDelete.isFalse()) {
+		if (canDelete.isTrue()) {
 			bookRepository.delete(book);
 		} else {
 

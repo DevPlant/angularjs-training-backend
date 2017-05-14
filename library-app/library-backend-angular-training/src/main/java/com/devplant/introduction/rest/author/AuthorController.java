@@ -29,6 +29,16 @@ public class AuthorController {
 
 	}
 
+	@RequestMapping(value = "/{authorId}", method = RequestMethod.GET)
+	public Author getAuthor(@PathVariable("authorId") long authorId) {
+		Author author = authorRepository.findOne(authorId);
+		if (author == null) {
+			throw new ObjectDoesNotExistException("Author with id : " + authorId + " does not exist");
+		}
+
+		return author;
+	}
+
 	/**
 	 * Update a specific author
 	 */
@@ -87,8 +97,7 @@ public class AuthorController {
 			return;
 		}
 		if (author.getAuthoredBooks().size() > 0) {
-			throw new ObjectCannotBeDeletedException(
-					"Book has reservations, it cannot be deleted until these are returned");
+			throw new ObjectCannotBeDeletedException("Author is assigned to books, it cannot be deleted!");
 		}
 
 		authorRepository.delete(authorId);

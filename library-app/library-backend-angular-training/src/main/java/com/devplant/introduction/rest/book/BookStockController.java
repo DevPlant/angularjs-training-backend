@@ -2,7 +2,6 @@ package com.devplant.introduction.rest.book;
 
 import com.devplant.introduction.domain.Book;
 import com.devplant.introduction.domain.BookStock;
-import com.devplant.introduction.exception.ObjectCannotBeDeletedException;
 import com.devplant.introduction.exception.ObjectDoesNotExistException;
 import com.devplant.introduction.repository.jpa.BookRepository;
 import com.devplant.introduction.repository.jpa.BookStockRepository;
@@ -48,16 +47,20 @@ public class BookStockController {
 	@Transactional
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasRole('ADMIN')")
-	@RequestMapping(value = "/api/book-stocks/{bookStockId}", method = RequestMethod.DELETE)
-	public void removeBookStock(@PathVariable("bookStockId") long bookStockId) {
+	@RequestMapping(value = "/api/book-stocks/{bookId}", method = RequestMethod.DELETE)
+	public void removeBookStock(@PathVariable("bookId") long bookId) {
 
-		BookStock bookStock = bookStockRepository.findOne(bookStockId);
-		if (bookStock.getUserId() == null) {
-			bookStockRepository.delete(bookStock);
-		} else {
-			throw new ObjectCannotBeDeletedException("Bookstock cannot be deleted, it is reserved by a user!");
+		Book book = bookRepository.findOne(bookId);
+		if (book == null) {
+			throw new ObjectDoesNotExistException("Book with id : " + bookId + " does not exist");
 		}
 
+		BookStock bookStock = book.getStocks().stream().filter(stock -> stock.getUserId() != null).findAny()
+				.orElse(null);
+
+		if (bookStock != null) {
+			bookStockRepository.delete(bookStock);
+		}
 	}
 
 	/**

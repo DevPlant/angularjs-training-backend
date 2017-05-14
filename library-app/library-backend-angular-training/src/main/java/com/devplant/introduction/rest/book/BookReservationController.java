@@ -17,9 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/api/books/reservations")
 public class BookReservationController {
 
 	@Autowired
@@ -35,12 +36,18 @@ public class BookReservationController {
 	 * Make a reservation for a book, you'll need to pick it up :)
 	 */
 	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = "/reservation", method = RequestMethod.POST)
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public BookStock makeReservation(@RequestBody BookReservationModel bookReservationModel, Principal principal) {
 
 		return bookReservationService
 				.reserveBook(bookReservationModel.getPickupTimestamp(), bookReservationModel.getBookId(),
 						principal.getName());
+	}
+
+	@PreAuthorize("hasRole('USER')")
+	@RequestMapping(value = "/mine", method = RequestMethod.GET)
+	public List<BookStock> myReservations(Principal principal) {
+		return bookStockRepository.findByUsername(principal.getName());
 	}
 
 	/**
@@ -49,7 +56,7 @@ public class BookReservationController {
 	@Transactional
 	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value = "/check-availability/{bookId}", method = RequestMethod.GET)
-	public BooleanResponseModel checkAvailability(@PathVariable("bookId") Long bookId ) {
+	public BooleanResponseModel checkAvailability(@PathVariable("bookId") Long bookId) {
 
 		Book book = bookRepository.findOne(bookId);
 		if (book == null) {
@@ -73,7 +80,7 @@ public class BookReservationController {
 	@Transactional
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize("hasRole('USER')")
-	@RequestMapping(value = "/reservation/{bookStockId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/{bookStockId}", method = RequestMethod.DELETE)
 	public void cancelReservation(@PathVariable("bookStockId") long bookStockId, Principal principal) {
 
 		BookStock bookStock = bookStockRepository.findOne(bookStockId);

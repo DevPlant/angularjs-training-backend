@@ -31,11 +31,17 @@ public class ErrorProcessingAdvice {
 		return new ErrorModel(exception);
 	}
 
-
 	@ResponseBody
 	@ResponseStatus(value = HttpStatus.CONFLICT)
 	@ExceptionHandler(value = { ObjectCannotBeDeletedException.class })
 	protected ErrorModel handleObjectCannotBeDeletedException(ObjectCannotBeDeletedException exception) {
+		return new ErrorModel(exception);
+	}
+
+	@ResponseBody
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(value = { Exception.class })
+	public ErrorModel handleDefault(Exception exception) {
 		return new ErrorModel(exception);
 	}
 }

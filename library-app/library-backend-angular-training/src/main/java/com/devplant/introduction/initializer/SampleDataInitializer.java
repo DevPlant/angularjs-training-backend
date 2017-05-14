@@ -154,7 +154,7 @@ public class SampleDataInitializer implements CommandLineRunner {
 		List<Book> books = Lists.newArrayList(lotr1, lotr2, lotr3, got1, got2, got3, got4, got5);
 
 		books.forEach(book -> book
-				.setStocks(IntStream.range(0, 3).mapToObj(i -> new BookStock(book)).collect(Collectors.toList())));
+				.setStocks(IntStream.range(0, new Random().nextInt(3)+3).mapToObj(i -> new BookStock(book)).collect(Collectors.toList())));
 
 		bookRepository.save(books);
 
@@ -182,8 +182,8 @@ public class SampleDataInitializer implements CommandLineRunner {
 		bookStockRepository.findAll().forEach(stock -> LOGGER.debug(stock.toString()));
 
 		for (User user : users) {
-			User foundUser = userRepository.findOneByActivationId(user.getActivationId());
-			log.info("Found user : " + foundUser + " - " + user.getActivationId());
+			User foundUser = userRepository.findOneByUsernameIgnoreCase(user.getUsername());
+			log.info("Found user : " + foundUser + " - " + user.getUsername());
 		}
 
 	}

@@ -41,7 +41,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("devplant-backend").secret("devplant-backend-secret")
-				.authorizedGrantTypes("refresh_token", "password").scopes("openid").accessTokenValiditySeconds(3600)
+				.authorizedGrantTypes("refresh_token", "password").scopes("openid").accessTokenValiditySeconds(7200)
 				.refreshTokenValiditySeconds(0).autoApprove(true);
 	}
 

@@ -22,4 +22,8 @@ public class Author {
 	@JsonIgnore
 	@OneToMany(mappedBy = "author")
 	private Set<Book> authoredBooks;
+
+	public boolean hasBooks(){
+		return (getAuthoredBooks()!=null && getAuthoredBooks().size() > 0);
+	}
 }

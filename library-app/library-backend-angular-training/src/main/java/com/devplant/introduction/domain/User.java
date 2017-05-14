@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -41,9 +40,6 @@ public class User implements UserDetails {
 	@JsonIgnore
 	private String password;
 
-	@Column(unique = true)
-	private String activationId;
-
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonBackReference
 	private List<BookStock> reservedBookStocks;
@@ -69,13 +65,12 @@ public class User implements UserDetails {
 		this.username = email;
 		this.email = email;
 		this.password = password;
-		this.activationId = UUID.randomUUID().toString();
 		this.authorities = Lists.newArrayList(new UserAuthority(Roles.ROLE_USER));
 	}
 
 	public boolean isAdmin() {
 		return this.authorities != null
-			   && this.authorities.stream().filter(a -> a.getAuthority().equals(Roles.ROLE_ADMIN)).count() == 1;
+			   && this.authorities.stream().filter(a -> a.getAuthority().equals(Roles.ROLE_PREFIX+Roles.ROLE_ADMIN)).count() == 1;
 	}
 
 }

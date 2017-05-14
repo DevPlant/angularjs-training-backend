@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: sample-data,dev
+    active: sample-data,dev,secure
 
 admin:
   user:

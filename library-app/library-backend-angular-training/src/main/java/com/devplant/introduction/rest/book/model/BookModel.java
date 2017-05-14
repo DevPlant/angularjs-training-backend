@@ -10,5 +10,6 @@ public class BookModel {
 	private String synopsis;
 	private String isbn;
 
-	private long authorId;
+	private BookAuthorModel author;
+
 }

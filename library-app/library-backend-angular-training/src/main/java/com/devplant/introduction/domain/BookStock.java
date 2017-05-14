@@ -39,4 +39,15 @@ public class BookStock {
 	public BookStock(Book book) {
 		this.book = book;
 	}
+
+	public String getRequestFullName() {
+		if (this.userId != null) {
+			return getUser() != null ? getUser().getFullName() : null;
+		}
+		return null;
+	}
+
+	public Long getBookId() {
+		return this.getBook() != null ? this.getBook().getId() : null;
+	}
 }

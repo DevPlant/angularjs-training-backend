@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User existingUser = userRepository.findOneByUsername(username);
+		User existingUser = userRepository.findOneByUsernameIgnoreCase(username);
 		if (existingUser == null) {
 			throw new UsernameNotFoundException(username);
 		} else {
@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void register(UserRegistrationModel userRegistrationModel) {
-		User existingUser = userRepository.findOneByUsername(userRegistrationModel.getEmail());
+		User existingUser = userRepository.findOneByUsernameIgnoreCase(userRegistrationModel.getEmail());
 		if (existingUser == null) {
 			existingUser = new User(userRegistrationModel.getFirstName(), userRegistrationModel.getLastName(),
 					userRegistrationModel.getEmail(), passwordEncoder.encode(userRegistrationModel.getPassword()));

@@ -5,12 +5,14 @@ import com.devplant.introduction.domain.User;
 import com.devplant.introduction.exception.*;
 import com.devplant.introduction.repository.jpa.BookStockRepository;
 import com.devplant.introduction.repository.jpa.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
+@Slf4j
 @Service
 public class BookReservationService {
 
@@ -27,11 +29,15 @@ public class BookReservationService {
 
 		Instant pickupInstant = Instant.ofEpochMilli(pickupTimestamp);
 
-		if (pickupInstant.minusSeconds(86400 * 3).isAfter(now)) {
-			throw new BookPickupDateIsToFarInTheFutureException();
+		if (pickupInstant.plusSeconds(86400).isBefore(now)) {
+			throw new BookPickupDateIsToFarInTheFutureException("Book pickup date cannot be in the past!");
 		}
 
-		User user = userRepository.findOneByUsername(username);
+		if (pickupInstant.minusSeconds(86400 * 5).isAfter(now)) {
+			throw new BookPickupDateIsToFarInTheFutureException("Pickup date is to far in the future");
+		}
+
+		User user = userRepository.findOneByUsernameIgnoreCase(username);
 
 		// If the user reserved this book already - throw an exception - he cannot get the same book twice ;)
 		user.getReservedBookStocks().forEach(bookStock -> {

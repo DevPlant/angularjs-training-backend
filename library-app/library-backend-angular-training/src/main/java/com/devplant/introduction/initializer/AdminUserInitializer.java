@@ -27,7 +27,7 @@ public class AdminUserInitializer implements CommandLineRunner {
 	@Transactional
 	protected void createAdminUser() {
 
-		User adminUser = userRepository.findOneByUsername(adminUserProperties.getUsername());
+		User adminUser = userRepository.findOneByUsernameIgnoreCase(adminUserProperties.getUsername());
 		if (adminUser != null) {
 			adminUser.setEnabled(true);
 			adminUser.setPassword(passwordEncoder.encode(adminUserProperties.getPassword()));
